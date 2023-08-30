@@ -1,35 +1,40 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import TagView from "./components/TagView";
+import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [tree, setTree] = useState({
+    name: "root",
+    children: [
+      {
+        name: "child1",
+        children: [
+          { name: "child1-child1", data: "c1-c1 Hello" },
+          { name: "child1-child2", data: "c1-c2 JS" },
+        ],
+      },
+      { name: "child2", data: "c2 World" },
+    ],
+  });
+
+  const handleTagChange = (updatedTag) => {
+    setTree((prevTree) => {
+      const updatedTree = { ...prevTree };
+      // Update the tag in the tree hierarchy
+      // You might need a recursive function to find and update the tag
+      // Here, we are updating the root level tag for simplicity
+      updatedTree.name = updatedTag.name;
+      updatedTree.data = updatedTag.data;
+      return updatedTree;
+    });
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div>
+      <h1>Nested Tags Tree</h1>
+      <TagView tag={tree} onTagChange={handleTagChange} />
+    </div>
+  );
 }
 
-export default App
+export default App;

@@ -1,68 +1,113 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-const TagView = ({ tag, onTagChange }) => {
-  const [showAddChild, setShowAddChild] = useState(false);
-  const [newChildName, setNewChildName] = useState("");
-  const [children, setChildren] = useState(tag.children || []);
+const TagView = ({ tag, onTagChange, sendData }) => {
 
-  const toggleAddChild = () => {
-    setShowAddChild(!showAddChild);
-    setNewChildName("");
+  const handleTagChange = (property, value) => {
+    tag = { ...tag, [property]: value };
+    sendData(tag);
+    
   };
 
   const addChild = () => {
-    setChildren([...children, { name: newChildName }]);
-    toggleAddChild();
-  };
-
-  const handleTagChange = (property, value) => {
-    const updatedTag = { ...tag, [property]: value };
-    onTagChange(updatedTag);
+    const newChild = {name: "NewChild", data: "Data"};
+    delete tag.data;
+    const updatedChildren = tag.children? [...tag.children, newChild]: [newChild];
+    const newTag = {...tag, children: updatedChildren};
+    sendData(newTag);
   };
 
   return (
-    <div style={{ marginLeft: "20px" }}>
-      <div>
-        <input
+    <div style={{ border: "1px solid red", margin: "50px", textAlign: "left" }}>
+      <div style={{ border: "1px solid blue", backgroundColor: "yellow" }}>
+        {/* <input
           type="text"
           value={tag.name}
           onChange={(e) => handleTagChange("name", e.target.value)}
-        />
+        /> */}
+        <span>
+          {tag.name}
+          <button onClick={addChild}>Add Child</button>
+        </span>
       </div>
-      <div>
-        {!(tag.data === undefined) && <input
-          type="text"
-          value={tag.data || ""}
-          onChange={(e) => handleTagChange("data", e.target.value)}
-          placeholder="Data"
-        />}
-      </div>
-      {children.map((child, index) => (
-        <TagView
-          key={index}
-          tag={child}
-          onTagChange={(updatedChild) => {
-            const updatedChildren = [...children];
-            updatedChildren[index] = updatedChild;
-            setChildren(updatedChildren);
-          }}
-        />
-      ))}
-      {showAddChild ? (
+
+      {!(tag.data === undefined) && (
         <div>
+          <span>Data </span>
           <input
             type="text"
-            placeholder="New Child Name"
-            value={newChildName}
-            onChange={(e) => setNewChildName(e.target.value)}
+            value={tag.data}
+            onChange={(e) => handleTagChange("data", e.target.value)}
+            placeholder="data"
           />
-          <button onClick={addChild}>Add Child</button>
         </div>
-      ) : (
-        <button onClick={toggleAddChild}>Add Child</button>
       )}
+
+      {tag.children &&
+        tag.children.map((child, index) => (
+
+          <ChildObject
+            key={index}
+            tag={child}
+            index={index}
+            sendData={(updatedTag) => {
+              tag.children[index] = updatedTag;
+              sendData(tag);
+            }}
+          />
+        ))}
     </div>
   );
 };
+
+function ChildObject({ index, tag, sendData }) {
+  const handleTagChange = (property, value) => {
+    tag = { ...tag, [property]: value };
+    sendData(tag);
+  };
+
+  const addChild = () => {
+    const newChild = {name: "NewChild", data: "Data"};
+    delete tag.data;
+    const updatedChildren = tag.children? [...tag.children, newChild]: [newChild];
+    const newTag = {...tag, children: updatedChildren};
+    sendData(newTag);
+  };
+
+  return (
+    <div style={{ border: "1px solid red", margin: "50px", textAlign: "left" }}>
+      <div style={{ border: "1px solid blue", backgroundColor: "yellow" }}>
+        <span>
+          {tag.name}
+          <button onClick={addChild}>Add Child</button>
+        </span>
+      </div>
+
+      {!(tag.data === undefined) && (
+        <div>
+          <span>Data </span>
+          <input
+            type="text"
+            value={tag.data}
+            onChange={(e) => handleTagChange("data", e.target.value)}
+            placeholder="data"
+          />
+        </div>
+      )}
+
+      {tag.children &&
+        tag.children.map((child, index) => (
+          <ChildObject
+            key={index}
+            index={index}
+            tag={child}
+            sendData={(updatedTag) => {
+              tag.children[index] = updatedTag;
+              sendData(tag);
+            }}
+          />
+        ))}
+    </div>
+  );
+}
 
 export default TagView;

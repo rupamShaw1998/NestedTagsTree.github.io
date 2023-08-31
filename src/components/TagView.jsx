@@ -93,5 +93,4 @@ const TagView = ({ tag, sendData }) => {
   );
 };
 
-
 export default TagView;

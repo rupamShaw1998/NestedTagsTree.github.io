@@ -29,8 +29,6 @@ function App() {
     });
   };
 
-  console.log({tree});
-
   return (
     <div>
       <h1>Nested Tags Tree</h1>

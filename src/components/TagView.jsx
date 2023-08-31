@@ -1,3 +1,4 @@
+import { Collapse } from "antd";
 import React, { useState } from "react";
 
 const TagView = ({ tag, sendData }) => {
@@ -23,9 +24,9 @@ const TagView = ({ tag, sendData }) => {
     sendData(newTag);
   };
 
-  return (
-    <div style={{ border: "1px solid red", margin: "50px", textAlign: "left" }}>
-      <div style={{ border: "1px solid blue", backgroundColor: "yellow" }}>
+  const getName = () => {
+    return (
+      <div>
         {editName ? (
           <input
             type="text"
@@ -35,34 +36,55 @@ const TagView = ({ tag, sendData }) => {
         ) : (
           <span onClick={() => setEditName(true)}>{tag.name}</span>
         )}
-
-        <button onClick={addChild}>Add Child</button>
       </div>
+    );
+  }
 
-      {!(tag.data === undefined) && (
-        <div>
-          <span>Data </span>
-          <input
-            type="text"
-            value={tag.data}
-            onChange={(e) => handleTagChange("data", e.target.value)}
-            placeholder="data"
-          />
-        </div>
-      )}
+  const getDataAndChildren = () => {
+    return (
+      <div>
+        {!(tag.data === undefined) && (
+          <div>
+            <span>Data </span>
+            <input
+              type="text"
+              value={tag.data}
+              onChange={(e) => handleTagChange("data", e.target.value)}
+              placeholder="data"
+            />
+          </div>
+        )}
 
-      {tag.children &&
-        tag.children.map((child, index) => (
-          <TagView
-            key={index}
-            tag={child}
-            index={index}
-            sendData={(updatedTag) => {
-              tag.children[index] = updatedTag;
-              sendData(tag);
-            }}
-          />
+        {tag.children &&
+          tag.children.map((child, index) => (
+            <TagView
+              key={index}
+              tag={child}
+              index={index}
+              sendData={(updatedTag) => {
+                tag.children[index] = updatedTag;
+                sendData(tag);
+              }}
+            />
         ))}
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ textAlign: "left", marginBottom: "5px" }}>
+      <Collapse
+        collapsible="icon"
+        defaultActiveKey={['1']}
+        items={[
+          {
+            key: '1',
+            label: getName(), 
+            children: getDataAndChildren(), 
+            extra: <button onClick={addChild}>Add Child</button>
+          }
+        ]}
+      />
     </div>
   );
 };

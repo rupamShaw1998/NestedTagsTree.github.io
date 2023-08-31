@@ -19,7 +19,6 @@ function App() {
   });
 
   const handleTagChange = (updatedTag) => {
-    console.log({updatedTag});
     setTree((prevTree) => {
       const updatedTree = { ...prevTree };
       updatedTree.name = updatedTag.name;
@@ -29,7 +28,7 @@ function App() {
     });
   };
 
-  console.log({tree})
+  console.log({tree});
 
   return (
     <div>

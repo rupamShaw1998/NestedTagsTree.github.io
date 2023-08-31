@@ -1,6 +1,7 @@
 import { useState } from "react";
 import TagView from "./components/TagView";
 import "./App.css";
+import { Button } from "antd";
 
 function App() {
   const [showExport, setShowExport] = useState(false);
@@ -34,7 +35,7 @@ function App() {
     <div>
       <h1>Nested Tags Tree</h1>
       <TagView tag={tree} sendData={handleTagChange} />
-      <button onClick={() => setShowExport(true)}>Export</button>
+      <Button type="primary" onClick={() => setShowExport(true)}>Export</Button>
       {showExport && <div>{JSON.stringify(tree)}</div>}
     </div>
   );

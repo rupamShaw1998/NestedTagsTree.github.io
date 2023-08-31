@@ -1,5 +1,8 @@
-import { Collapse } from "antd";
+import { Button, Collapse, Input, Typography } from "antd";
 import React, { useState } from "react";
+import "./TagView.css";
+
+const { Text } = Typography;
 
 const TagView = ({ tag, sendData }) => {
   const [editName, setEditName] = useState(false);
@@ -34,7 +37,7 @@ const TagView = ({ tag, sendData }) => {
             onKeyUp={nameChange}
           />
         ) : (
-          <span onClick={() => setEditName(true)}>{tag.name}</span>
+          <Text strong onClick={() => setEditName(true)}>{tag.name}</Text>
         )}
       </div>
     );
@@ -46,11 +49,12 @@ const TagView = ({ tag, sendData }) => {
         {!(tag.data === undefined) && (
           <div>
             <span>Data </span>
-            <input
+            <Input
               type="text"
               value={tag.data}
               onChange={(e) => handleTagChange("data", e.target.value)}
               placeholder="data"
+              style={{width: "20%"}}
             />
           </div>
         )}
@@ -81,7 +85,7 @@ const TagView = ({ tag, sendData }) => {
             key: '1',
             label: getName(), 
             children: getDataAndChildren(), 
-            extra: <button onClick={addChild}>Add Child</button>
+            extra: <Button onClick={addChild}>Add Child</Button>
           }
         ]}
       />
